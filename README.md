@@ -6,6 +6,8 @@ PIR Sensor Module on the NodeMCU-ESP32S
 
 
 <img width="600" height="398" alt="image" src="https://github.com/user-attachments/assets/29dc91ab-dda5-468d-aa14-ef92a267b5d5" />
+
+
 _Modified to work at 3.3V_
 
 ### Notes
