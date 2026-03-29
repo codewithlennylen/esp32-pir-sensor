@@ -1,18 +1,54 @@
+/*********
+  Rui Santos & Sara Santos - Random Nerd Tutorials
+  Complete project details at https://RandomNerdTutorials.com/esp32-pir-motion-sensor-interrupts-timers/
+  ESP32 GPIO Interrupts with Arduino IDE: https://RandomNerdTutorials.com/esp32-gpio-interrupts-arduino/
+*********/
+
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+
+constexpr uint8_t led = 4; // Internal LED
+constexpr uint8_t pirSensor = 27;
+
+// Timer: Auxiliary variables
+unsigned long now;
+volatile unsigned long lastTrigger = 0;
+volatile bool startTimer = false;
+
+bool printMotion = false;
+
+const unsigned long timeSeconds = 5 * 1000UL;  //5 seconds in milliseconds
+
+void ARDUINO_ISR_ATTR motionISR() {
+  lastTrigger = millis();
+  startTimer = true;
+}
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+  pinMode(motionSensor, INPUT_PULLUP);
+  attachInterrupt(motionSensor, motionISR, RISING);
+
+  // Set LED to LOW
+  pinMode(led, OUTPUT);
+  digitalWrite(led, LOW);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
+  now = millis();
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+// Turn LED on immediately on new trigger
+  if (startTimer && !printMotion) {
+    digitalWrite(led, HIGH);
+    Serial.println("MOTION DETECTED!!!");
+    printMotion = true;
+  }
+
+// Turn off the LED after timeout
+  if (startTimer && (now - lastTrigger > timeSeconds)) {
+    Serial.println("Motion stopped...");
+    digitalWrite(led, LOW);
+    startTimer = false;
+    printMotion = false;
+  }
 }
