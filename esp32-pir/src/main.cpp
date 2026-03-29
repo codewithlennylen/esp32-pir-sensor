@@ -7,7 +7,7 @@
 #include <Arduino.h>
 
 
-constexpr uint8_t led = 4; // Internal LED
+constexpr uint8_t led = 4;
 constexpr uint8_t pirSensor = 27;
 
 // Timer: Auxiliary variables
@@ -26,8 +26,8 @@ void ARDUINO_ISR_ATTR motionISR() {
 
 void setup() {
   Serial.begin(9600);
-  pinMode(motionSensor, INPUT_PULLUP);
-  attachInterrupt(motionSensor, motionISR, RISING);
+  pinMode(pirSensor, INPUT_PULLUP);
+  attachInterrupt(pirSensor, motionISR, RISING);
 
   // Set LED to LOW
   pinMode(led, OUTPUT);
